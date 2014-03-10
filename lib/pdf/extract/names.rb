@@ -1,6 +1,5 @@
 require 'net/http'
 require 'json'
-require 'sqlite3'
 
 require_relative '../extract.rb'
 
@@ -15,7 +14,6 @@ module PdfExtract::Names
                        File.dirname(__FILE__))
     end
 
-    @@db = SQLite3::Database.new(path_to_data("familynames.db"), {:readonly => true})
     @@stop_words = File.open(path_to_data("stopwords.txt")).read.split(",")
 
     def self.detect_names content
@@ -29,14 +27,6 @@ module PdfExtract::Names
           query_word = word.capitalize.gsub(/-(.)/) { |s|
             "-" + s[1].capitalize
           }
-
-          @@db.execute("select * from names where name = ?", query_word) do |row|
-            if row[2] == 1
-              sum += @@ambiguous_weighting
-            else
-              sum += @@unambiguous_weighting
-            end
-          end
         end
 
       end
