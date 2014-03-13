@@ -40,9 +40,11 @@ module PdfExtract
         }
       else
         font_descriptor = font.font_descriptor
-        @ascent = font_descriptor.ascent
-        @descent = font_descriptor.descent
-        @bbox = font_descriptor.font_bounding_box
+        if font_descriptor
+          @ascent = font_descriptor.ascent
+          @descent = font_descriptor.descent
+          @bbox = font_descriptor.font_bounding_box
+        end
         @glyph_width_lookup = proc do |c|
           begin
             font.glyph_width(c.codepoints.first) || 0
